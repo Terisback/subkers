@@ -65,7 +65,7 @@ func main() {
 	defer markersFile.Close()
 
 	// Writing markers to file
-	if _, err := markersFile.WriteString("Name\tStart\tEnd\tTime Format\tType\tDescription\n"); err != nil {
+	if _, err := markersFile.WriteString("Name\tStart\tDuration\tTime Format\tType\tDescription\n"); err != nil {
 		fmt.Println(fmt.Sprint("Can't write to file:", err))
 		os.Exit(1)
 	}
@@ -76,7 +76,7 @@ func main() {
 
 		line := strings.ReplaceAll(strings.Join(val.Lines, " "), "\\N", "") + "\t" +
 			timeToString(val.StartAt) + "\t" +
-			timeToString(val.EndAt) + "\tdecimal\tCue\t\n"
+			timeToString(val.Duration) + "\tdecimal\tCue\t\n"
 
 		if _, err := markersFile.WriteString(line); err != nil {
 			fmt.Println(fmt.Sprint("Can't write to file:", err))
@@ -86,9 +86,9 @@ func main() {
 }
 
 type Marker struct {
-	StartAt time.Duration
-	Lines   []string
-	EndAt   time.Duration
+	StartAt  time.Duration
+	Lines    []string
+	Duration time.Duration
 }
 
 type SubtitleType int
@@ -157,7 +157,7 @@ func markers(subs *astisub.Subtitles) ([]Marker, error) {
 	for _, item := range subs.Items {
 		var m Marker
 		m.StartAt = item.StartAt
-		m.EndAt = item.EndAt
+		m.Duration = item.EndAt - item.StartAt
 		for _, line := range item.Lines {
 			for _, lineItem := range line.Items {
 				m.Lines = append(m.Lines, string(lineItem.Text))
