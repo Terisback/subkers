@@ -1,7 +1,5 @@
 # Subkers
 
----
-
 **How to convert subtitles to markers**
 
 ![Demostation GIF 3](https://user-images.githubusercontent.com/26527529/65965277-c8a4de80-e477-11e9-9f2d-285aacd9faa1.gif)
@@ -15,8 +13,6 @@
 **How to use markers in Adobe Audition**
 
 ![Demonstration GIF 2](https://user-images.githubusercontent.com/26527529/65933385-b3559300-e42a-11e9-9b8f-31e8cc3cbd15.gif)
-
----
 
 ## Download
 
