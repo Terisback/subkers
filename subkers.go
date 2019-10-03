@@ -25,10 +25,9 @@ func main() {
 	switch len(os.Args) {
 	case 2:
 		filePath = os.Args[1]
-	case 1:
-		filePath = os.Args[0]
 	default:
 		fmt.Println("Wrong arguments! Example: subkers <PATH TO SUBTITLES>")
+		fmt.Scanln()
 		os.Exit(1)
 	}
 
@@ -38,6 +37,7 @@ func main() {
 	file, err := os.Open(filePath)
 	if err != nil {
 		fmt.Println("Can't read:", err)
+		fmt.Scanln()
 		os.Exit(1)
 	}
 	defer file.Close()
@@ -46,6 +46,7 @@ func main() {
 	ext, err := ExtType(splittedFilename[len(splittedFilename)-1])
 	if err != nil {
 		fmt.Println(err)
+		fmt.Scanln()
 		os.Exit(1)
 	}
 
@@ -53,13 +54,15 @@ func main() {
 	markers, err := ProcessSubs(ext, file)
 	if err != nil {
 		fmt.Println(err)
+		fmt.Scanln()
 		os.Exit(1)
 	}
 
 	// Creating markers file
-	markersFile, err := os.Create(strings.Join(strings.Split(filePath, ".")[:1], "") + ".csv")
+	markersFile, err := os.Create(strings.Join(splittedFilename[:len(splittedFilename)-1], ".") + ".csv")
 	if err != nil {
 		fmt.Println(fmt.Sprint("Can't create file:", err))
+		fmt.Scanln()
 		os.Exit(1)
 	}
 	defer markersFile.Close()
@@ -67,6 +70,7 @@ func main() {
 	// Writing markers to file
 	if _, err := markersFile.WriteString("Name\tStart\tDuration\tTime Format\tType\tDescription\n"); err != nil {
 		fmt.Println(fmt.Sprint("Can't write to file:", err))
+		fmt.Scanln()
 		os.Exit(1)
 	}
 	for _, val := range markers {
@@ -80,6 +84,7 @@ func main() {
 
 		if _, err := markersFile.WriteString(line); err != nil {
 			fmt.Println(fmt.Sprint("Can't write to file:", err))
+			fmt.Scanln()
 			os.Exit(1)
 		}
 	}
