@@ -1,5 +1,7 @@
 # Subkers
 
+---
+
 **How to convert subtitles to markers**
 
 ![Demostation GIF 3](https://user-images.githubusercontent.com/26527529/65965277-c8a4de80-e477-11e9-9f2d-285aacd9faa1.gif)

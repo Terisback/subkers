@@ -1,4 +1,4 @@
-module terisback/SubkersService
+module github.com/Terisback/subkers
 
 go 1.13
 
