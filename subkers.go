@@ -1,4 +1,4 @@
-package main
+package subkers
 
 import (
 	"bytes"
@@ -7,7 +7,6 @@ import (
 	"io"
 	"io/ioutil"
 	"math"
-	"os"
 	"strings"
 	"time"
 
@@ -20,80 +19,10 @@ import (
 	"github.com/asticode/go-astisub"
 )
 
-func main() {
-	var filePath string
-	switch len(os.Args) {
-	case 2:
-		filePath = os.Args[1]
-	default:
-		fmt.Println("Wrong arguments! Example: subkers <PATH TO SUBTITLES>")
-		fmt.Scanln()
-		os.Exit(1)
-	}
-
-	splittedFilename := strings.Split(filePath, ".")
-
-	// Reading file
-	file, err := os.Open(filePath)
-	if err != nil {
-		fmt.Println("Can't read:", err)
-		fmt.Scanln()
-		os.Exit(1)
-	}
-	defer file.Close()
-
-	// Recognize file extension
-	ext, err := ExtType(splittedFilename[len(splittedFilename)-1])
-	if err != nil {
-		fmt.Println(err)
-		fmt.Scanln()
-		os.Exit(1)
-	}
-
-	// Getting subs
-	markers, err := ProcessSubs(ext, file)
-	if err != nil {
-		fmt.Println(err)
-		fmt.Scanln()
-		os.Exit(1)
-	}
-
-	// Creating markers file
-	markersFile, err := os.Create(strings.Join(splittedFilename[:len(splittedFilename)-1], ".") + ".csv")
-	if err != nil {
-		fmt.Println(fmt.Sprint("Can't create file:", err))
-		fmt.Scanln()
-		os.Exit(1)
-	}
-	defer markersFile.Close()
-
-	// Writing markers to file
-	if _, err := markersFile.WriteString("Name\tStart\tDuration\tTime Format\tType\tDescription\n"); err != nil {
-		fmt.Println(fmt.Sprint("Can't write to file:", err))
-		fmt.Scanln()
-		os.Exit(1)
-	}
-	for _, val := range markers {
-		if strings.ReplaceAll(strings.Join(val.Lines, " "), "\\N", "") == "" {
-			continue
-		}
-
-		line := strings.ReplaceAll(strings.Join(val.Lines, " "), "\\N", "") + "\t" +
-			timeToString(val.StartAt) + "\t" +
-			timeToString(val.Duration) + "\tdecimal\tCue\t\n"
-
-		if _, err := markersFile.WriteString(line); err != nil {
-			fmt.Println(fmt.Sprint("Can't write to file:", err))
-			fmt.Scanln()
-			os.Exit(1)
-		}
-	}
-}
-
 type Marker struct {
 	StartAt  time.Duration
-	Lines    []string
 	Duration time.Duration
+	Lines    []string
 }
 
 type SubtitleType int
@@ -126,8 +55,17 @@ func ExtType(ext string) (SubtitleType, error) {
 	return SubtitleType(0), errors.New(fmt.Sprint("Can't recognize extension, got", ext))
 }
 
-// ProcessSub process any subtitles to .csv format (markers) for Adobe Audition and returns path to file
-func ProcessSubs(subtitlesType SubtitleType, reader io.Reader) ([]Marker, error) {
+// Process process subtitles file to .csv format (markers) for Adobe Audition
+func Process(filename string) ([]Marker, error) {
+	subtitles, err := astisub.OpenFile(filename)
+	if err != nil {
+		return nil, errors.New(fmt.Sprint("Can't read:", err))
+	}
+	return markers(subtitles)
+}
+
+// ProcessSpecific process specific extension subtitles to .csv format (markers) for Adobe Audition
+func ProcessSpecific(subtitlesType SubtitleType, reader io.Reader) ([]Marker, error) {
 	var subtitles *astisub.Subtitles
 	{
 		var err error
@@ -149,6 +87,8 @@ func ProcessSubs(subtitlesType SubtitleType, reader io.Reader) ([]Marker, error)
 			return nil, errors.New(fmt.Sprint("Can't read:", err))
 		}
 	}
+
+	// return markers from subtitles.
 	return markers(subtitles)
 }
 
@@ -157,7 +97,7 @@ func markers(subs *astisub.Subtitles) ([]Marker, error) {
 	subs.Order()
 	subs.Unfragment()
 
-	// Distill subtitles to markers
+	// Distill subtitles lines to markers lines
 	var markers []Marker
 	for _, item := range subs.Items {
 		var m Marker
@@ -171,6 +111,7 @@ func markers(subs *astisub.Subtitles) ([]Marker, error) {
 		markers = append(markers, m)
 	}
 
+	// return decoded markers. in the right encoding
 	return decode(markers)
 }
 
@@ -188,17 +129,18 @@ func decode(markers []Marker) ([]Marker, error) {
 	}
 
 	// Process based on encoding
-	// I don't know how to do it multilang
+	// it will be okay
 	switch result.Charset {
 	case "UTF-8":
+		// its okay
 		// just let it go
 		return markers, nil
 	default:
-		// fuck it, let it be so
+		// should work almost anyway
+		// let it be so
 		for i, m := range markers {
 			for j, l := range m.Lines {
-				I := bytes.NewReader([]byte(l))
-				O := transform.NewReader(I, charmap.Windows1251.NewDecoder())
+				O := transform.NewReader(bytes.NewReader([]byte(l)), charmap.Windows1251.NewDecoder())
 				line, e := ioutil.ReadAll(O)
 				if e != nil {
 					return nil, errors.New(fmt.Sprint("Can't read:", err))
@@ -206,13 +148,36 @@ func decode(markers []Marker) ([]Marker, error) {
 				markers[i].Lines[j] = string(line)
 			}
 		}
+		// its okay
 		return markers, nil
 	}
 }
 
-func timeToString(t time.Duration) string {
+// TimeToString converts Marker time variables to text
+func TimeToString(t time.Duration) string {
 	ms := fmt.Sprintf("%3.f", math.Floor(math.Mod(t.Seconds(), 1)*1000))
 	sec := fmt.Sprintf("%2.f", math.Floor(math.Mod(t.Seconds(), 60)))
 	min := fmt.Sprintf("%2.f", math.Floor(t.Seconds()/60))
 	return strings.ReplaceAll(min+":"+sec+"."+ms, " ", "")
+}
+
+// WriteAll markers to writer
+func WriteAll(markers []Marker, writer io.Writer) error {
+	if _, err := writer.Write([]byte("Name\tStart\tDuration\tTime Format\tType\tDescription\n")); err != nil {
+		return errors.New(fmt.Sprint("Can't write:", err))
+	}
+	for _, val := range markers {
+		if strings.ReplaceAll(strings.Join(val.Lines, " "), "\\N", "") == "" {
+			continue
+		}
+
+		line := strings.ReplaceAll(strings.Join(val.Lines, " "), "\\N", "") + "\t" +
+			TimeToString(val.StartAt) + "\t" +
+			TimeToString(val.Duration) + "\tdecimal\tCue\t\n"
+
+		if _, err := writer.Write([]byte(line)); err != nil {
+			return errors.New(fmt.Sprint("Can't write:", err))
+		}
+	}
+	return nil
 }
