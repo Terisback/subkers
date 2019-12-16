@@ -113,10 +113,6 @@ func WriteAll(markers []Marker, writer io.Writer) error {
 }
 
 func markers(subs *astisub.Subtitles) ([]Marker, error) {
-	subs.Optimize()
-	subs.Order()
-	subs.Unfragment()
-
 	// Distill subtitles lines to markers lines
 	var markers []Marker
 	for _, item := range subs.Items {
@@ -175,9 +171,9 @@ func decode(markers []Marker) ([]Marker, error) {
 
 // timeToString converts Marker time variables to text
 func timeToString(t time.Duration) string {
-	ms := fmt.Sprintf("%3.f", math.Floor(math.Mod(t.Seconds(), 1)*1000))
+	ms := fmt.Sprintf("%3.f", math.Mod(t.Seconds(), 1)*1000)
 	sec := fmt.Sprintf("%2.f", math.Floor(math.Mod(t.Seconds(), 60)))
-	min := fmt.Sprintf("%2.f", math.Floor(t.Seconds()/60))
+	min := fmt.Sprintf("%.f", math.Floor(t.Minutes()))
 	result := min + ":" + sec + "." + ms
-	return strings.ReplaceAll(result, " ", "")
+	return strings.ReplaceAll(result, " ", "0")
 }
