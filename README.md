@@ -14,6 +14,14 @@
 
 ![Demonstration GIF 2](https://user-images.githubusercontent.com/26527529/65933385-b3559300-e42a-11e9-9b8f-31e8cc3cbd15.gif)
 
+## Install
+
+You can install with `go install` command:
+
+```bash
+go install github.com/Terisback/subkers/cmd/subkers
+```
+
 ## Download
 
 [Latest release](https://github.com/Terisback/subkers/releases/latest)
