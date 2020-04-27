@@ -5,10 +5,7 @@ function fileFromInput() {
         var reader = new FileReader();
         reader.onload = (function(theFile) {
             return function(e) {
-                console.log(theFile.name);
-                console.log(e.target.result);
-
-                process(theFile.name, e.target.result);
+                console.log(process(theFile.name, e.target.result));
             };
         })(f);
         reader.readAsText(f);

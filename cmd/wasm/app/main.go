@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"log"
 	"strings"
 	"syscall/js"
@@ -9,26 +10,33 @@ import (
 	"github.com/maxence-charriere/go-app/v6/pkg/app"
 )
 
-type hello struct {
+type Application struct {
 	app.Compo
-	file string
 }
 
-func (h *hello) Render() app.UI {
+func (h *Application) Render() app.UI {
 	return app.Div().Body(
 		app.Main().Body(
-			app.Input().
-				ID("files").
-				AutoFocus(true).
-				OnChange(h.OnInputChange).
-				Type("file").
-				Accept(".srt, .ass, .ssa, .stl, .vtt, .ttml"),
-			app.Div().ID("list"),
+			app.Div().ID("input-area").Body(
+				app.H2().Body(
+					app.Text("Upload"),
+				),
+				app.Input().ID("files").
+					AutoFocus(true).
+					OnChange(h.OnInputChange).
+					Type("file").
+					Accept(".srt, .ass, .ssa, .stl, .vtt, .ttml"),
+			),
+			app.Div().ID("converted-area").Body(
+				app.H2().Body(
+					app.Text("Output"),
+				),
+			),
 		).ID("application"),
 	)
 }
 
-func (h *hello) OnInputChange(src app.Value, e app.Event) {
+func (h *Application) OnInputChange(src app.Value, e app.Event) {
 	app.Window().Call("fileFromInput")
 	h.Update()
 }
@@ -47,12 +55,14 @@ func Process(this js.Value, inputs []js.Value) interface{} {
 		log.Println(err)
 		return nil
 	}
-	subkers.WriteAll(m, log.Writer())
-	return nil
+
+	var out bytes.Buffer
+	subkers.WriteAll(m, &out)
+	return js.ValueOf(out.String())
 }
 
 func main() {
 	js.Global().Set("process", js.FuncOf(Process))
-	app.Route("/", &hello{})
+	app.Route("/", &Application{})
 	app.Run()
 }

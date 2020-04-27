@@ -4,8 +4,21 @@ body{
 
 input{
     border-bottom: none;
+    margin: initial;
+    padding: initial;
 }
 
 #application{
-    margin-top: 1em;
+    margin: 1em;
+}
+
+#application h2{
+    padding: 0 .25em .5em;
+}
+
+#input-area, #converted-area{
+    background-color: #405780;
+    border-radius: 1em;
+    padding: 1em;
+    margin-bottom: 0.5em;
 }
