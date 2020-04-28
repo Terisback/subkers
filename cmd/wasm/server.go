@@ -30,6 +30,9 @@ func main() {
 		},
 		Scripts: []string{
 			"/web/main.js",
+			"/web/fontawesome.min.js",
+			"/web/solid.min.js",
+			"/web/FileSaver.js",
 		},
 		Styles: []string{
 			"/web/main.css",
