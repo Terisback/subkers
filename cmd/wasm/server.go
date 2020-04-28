@@ -44,4 +44,11 @@ func main() {
 	if err := http.ListenAndServe(":7777", g); err != nil {
 		panic(err)
 	}
+
+	// For HTTPS serve
+	// if err := http.Serve(autocert.NewListener(), g); err != nil {
+	// 	panic(err)
+	// }
 }
+
+// To build app you need to cd app, the use command GOARCH=wasm GOOS=js go build -o ../app.wasm .
