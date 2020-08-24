@@ -6,9 +6,18 @@
         </div>
         <div class="application">
             <p class="info">Tool for converting subtitles into markers for Adobe Audition</p>
-            <button class="convert-button">
-                <span>Upload</span>
-            </button>
+            <div class="convert-container">
+                <button class="convert-button" @click.prevent="$refs.file.click()">
+                    <span>Upload</span>
+                </button>
+            </div>
+            <input
+                type="file"
+                ref="file"
+                accept=".ass, .ssa, .srt, .stl, .ttml, .vtt"
+                style="display: none"
+                @change="onChange"
+            />
         </div>
         <div class="footer">
             <span>Made by</span>
@@ -18,7 +27,42 @@
 </template>
 
 <script>
-export default {};
+import { saveAs } from "file-saver";
+import axios from "axios";
+
+//var fileTypes = ["srt", "ssa", "ass", "stl", "ttml", "vtt"];
+
+async function change(event) {
+    var file = event.target.files[0];
+    var reader = new FileReader();
+    reader.onload = async function (e) {
+        var formData = new FormData();
+        var newFilename = file.name.split(".")
+        formData.append("extension", newFilename.pop());
+        var sendBlob = new Blob([e.target.result]);
+        formData.append("subtitle", sendBlob, file.name);
+        axios
+            .post("/api/convert", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            })
+            .then((responce) => {
+                var blob = new Blob([responce.data], {
+                    type: "text/plain;charset=utf-8",
+                });
+                saveAs(blob, newFilename + ".csv");
+            });
+    };
+
+    reader.readAsText(file);
+}
+
+export default {
+    methods: {
+        onChange: change,
+    },
+};
 </script>
 
 <style>
@@ -71,17 +115,23 @@ export default {};
     gap: 16px;
 }
 
+.convert-container {
+    border-radius: 12px;
+    overflow: hidden;
+    background-image: linear-gradient(145deg, #1897ff, #0072d3);
+}
+
+.convert-container:hover {
+    background-image: linear-gradient(145deg, #19a3ff, #117bd3);
+}
+
 .convert-button {
+    width: 100%;
+    height: 100%;
     cursor: pointer;
     border: 0;
     padding: 16px;
-    border-radius: 12px;
-    transition: 1s;
-    background: linear-gradient(145deg, #1897ff, #0072d3);
-}
-
-.convert-button:hover {
-    background: linear-gradient(145deg, #19a3ff, #117bd3);
+    background-color: transparent;
 }
 
 .convert-button:focus {
@@ -96,12 +146,13 @@ export default {};
     text-align: center;
 }
 
-.footer{
+.footer {
     margin-top: auto;
     margin-bottom: 10px;
 }
 
-.footer span, .footer a{
-    color:#587fc4
+.footer span,
+.footer a {
+    color: #84aef5;
 }
 </style>

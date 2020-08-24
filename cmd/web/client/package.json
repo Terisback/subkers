@@ -9,6 +9,8 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
+    "@nuxtjs/axios": "^5.12.1",
+    "file-saver": "^2.0.2",
     "nuxt": "^2.14.0"
   },
   "devDependencies": {}

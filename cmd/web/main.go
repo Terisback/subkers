@@ -2,16 +2,16 @@ package main
 
 import (
 	"bytes"
-	"crypto/tls"
+	"errors"
 	"log"
+	"os"
 
 	"github.com/Terisback/subkers"
 	"github.com/gofiber/fiber"
 	"github.com/gofiber/fiber/middleware"
-	"golang.org/x/crypto/acme/autocert"
 )
 
-const TLS = false
+const MaxSizeOfFile = 5000000
 
 func main() {
 	app := fiber.New(&fiber.Settings{
@@ -29,54 +29,58 @@ func main() {
 		c.Redirect("/")
 	})
 
-	if TLS {
-		m := &autocert.Manager{
-			Prompt:     autocert.AcceptTOS,
-			HostPolicy: autocert.HostWhitelist("subkers.terisback.ru"),
-			Cache:      autocert.DirCache("./certs"),
-		}
-
-		tls := &tls.Config{
-			GetCertificate: m.GetCertificate,
-			NextProtos: []string{
-				"http/1.1", "acme-tls/1",
-			},
-		}
-
-		log.Fatal(app.Listen(443, tls))
-	} else {
-		log.Fatal(app.Listen(3000))
+	port := os.Getenv("SUBKERS_PORT")
+	if port == "" {
+		port = "80"
 	}
+
+	log.Fatal(app.Listen(port))
 }
 
 func convertHandler(c *fiber.Ctx) {
 	file, err := c.FormFile("subtitle")
 	if err != nil {
 		log.Println(err)
-		c.SendStatus(fiber.StatusBadRequest)
+		sendErrorViaJSON(c, err)
 		return
 	}
+
+	if file.Size > MaxSizeOfFile {
+		sendErrorViaJSON(c, errors.New("File is too big (Max size of file is 5 MB)"))
+		return
+	}
+
 	ext := c.FormValue("extension")
-	f, _ := file.Open()
 
 	subType, err := subkers.SubtitlesType(ext)
 	if err != nil {
-		c.SendStatus(fiber.StatusBadRequest)
+		sendErrorViaJSON(c, err)
 		return
 	}
 
+	f, _ := file.Open()
+	defer f.Close()
+
 	markers, err := subkers.ProcessSpecific(subType, f)
 	if err != nil {
-		c.SendStatus(fiber.StatusBadRequest)
+		sendErrorViaJSON(c, err)
 		return
 	}
 
 	var buf bytes.Buffer
 	err = subkers.WriteAll(markers, &buf)
 	if err != nil {
-		c.SendStatus(fiber.StatusBadRequest)
+		sendErrorViaJSON(c, err)
 		return
 	}
 
 	c.SendStream(&buf)
+}
+
+func sendErrorViaJSON(c *fiber.Ctx, err error) {
+	c.JSON(struct {
+		Err string `json:"error"`
+	}{
+		err.Error(),
+	})
 }
