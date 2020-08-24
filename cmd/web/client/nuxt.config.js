@@ -47,7 +47,8 @@ export default {
   ** https://nuxtjs.org/guide/plugins
   */
   plugins: [
-    { src: '~plugins/ga.js', mode: 'client' }
+    { src: '~plugins/ga.js', mode: 'client' },
+    '~plugins/swal',
   ],
   /*
   ** Auto import components
@@ -70,5 +71,6 @@ export default {
   ** See https://nuxtjs.org/api/configuration-build/
   */
   build: {
+    vendor: ['vue-swal']
   }
 }

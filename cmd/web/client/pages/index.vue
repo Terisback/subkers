@@ -30,10 +30,24 @@
 import { saveAs } from "file-saver";
 import axios from "axios";
 
-//var fileTypes = ["srt", "ssa", "ass", "stl", "ttml", "vtt"];
+var fileTypes = ["srt", "ssa", "ass", "stl", "ttml", "vtt"];
+
+function CheckFileType(file){
+    var ext = file.name.split('.').pop();
+    for (var i = 0; i<fileTypes; i++){
+        if (ext == fileTypes[i]){
+            return true
+        }
+    }
+    swal("Wrong file extension!", "Supported file extensions: .srt, .ssa, .ass, .stl, .ttml, .vtt", "error")
+    return false
+}
 
 async function change(event) {
     var file = event.target.files[0];
+    if (!CheckFileType(file)){
+        return;
+    }
     var reader = new FileReader();
     reader.onload = async function (e) {
         var formData = new FormData();
