@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="subkers.svg">
+  <link rel="mask-icon" href="subkers.svg" color="#01D7B0">
+  <link rel="apple-touch-icon" href="subkers180x180.png">
+  <meta name="theme-color" content="#01D7B0">
+  <title>Subkers</title>
+  <meta name="description" content="Tool for converting subtitles into markers for Adobe Audition">
+  <meta name="keywords" content="Audition, Subtitles, SRT, Markers">
+  <meta name="author" content="Anton Terisback">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <img class="logo" src="/subkers.svg" alt="Subkers Logo" />
+      <h1 class="title">Subkers</h1>
+    </div>
+    <div class="application">
+      <p class="info">Tool for converting subtitles into markers for Adobe Audition</p>
+      <div class="convert-container">
+        <label id="convert-button" for="file-input">
+          <span>Upload</span>
+        </label>
+        <input id="file-input" type="file" accept=".srt, .ass, .ssa" style="display: none" />
+      </div>
+    </div>
+    <div class="footer">
+      <span>Made by</span>
+      <a href="https://terisback.ru/">Anton Terisback</a>
+    </div>
+  </div>
+  <script type="module" src="/main.js"></script>
+</body>
+
+</html>
