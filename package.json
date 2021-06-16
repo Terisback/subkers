@@ -9,6 +9,7 @@
     "vite": "^2.3.5"
   },
   "dependencies": {
+    "animejs": "^3.2.1",
     "ass-compiler": "^0.1.3",
     "file-saver": "^2.0.5",
     "srt-parser-2": "^1.1.3",

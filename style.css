@@ -17,7 +17,7 @@ html {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
-  background-color: #19314d;
+  background-color: #0b1b20;
 }
 
 *,
@@ -41,7 +41,6 @@ html {
 }
 
 .header {
-  margin-top: auto;
   width: 100%;
   height: 100px;
   display: flex;
@@ -65,9 +64,10 @@ html {
 }
 
 .application {
+  margin: auto 0;
   width: 100%;
   padding: 24px;
-  background-color: #405780;
+  /* background-color: rgba(44, 53, 48, 0.425); */
   border-radius: 8px;
   display: flex;
   flex-direction: column;
@@ -81,11 +81,12 @@ html {
 .convert-container {
   border-radius: 12px;
   overflow: hidden;
-  background-image: linear-gradient(145deg, #1897ff, #0072d3);
+  transition: background-image 500ms ease;
+  background-image: linear-gradient(145deg, #18ffcd, #00d394);
 }
 
 .convert-container:hover {
-  background-image: linear-gradient(145deg, #19a3ff, #117bd3);
+  background-image: linear-gradient(90deg, #18ffcd, #00d394);
 }
 
 #convert-button {
@@ -111,12 +112,15 @@ html {
 }
 
 .footer {
-  margin-top: auto;
   margin-bottom: 10px;
 }
 
 .footer span,
 .footer a {
-  color: #84aef5;
+  color: #84f5e6a6;
   text-decoration-thickness: 1px;
+}
+
+.footer a:hover {
+  color: #84f5e6;
 }

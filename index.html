@@ -12,15 +12,18 @@
   <meta name="keywords" content="Audition, Subtitles, SRT, Markers">
   <meta name="author" content="Anton Terisback">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- <script type="module" src="/geometry.js"></script> -->
 </head>
 
 <body>
+  <div id="geometry">
+  </div>
   <div class="container">
-    <div class="header">
-      <img class="logo" src="/subkers.svg" alt="Subkers Logo" />
-      <h1 class="title">Subkers</h1>
-    </div>
     <div class="application">
+      <div class="header">
+        <img class="logo" src="/subkers.svg" alt="Subkers Logo" />
+        <h1 class="title">Subkers</h1>
+      </div>
       <p class="info">Tool for converting subtitles into markers for Adobe Audition</p>
       <div class="convert-container">
         <label id="convert-button" for="file-input">
@@ -36,5 +39,32 @@
   </div>
   <script type="module" src="/main.js"></script>
 </body>
+
+<svg style="display: none" version="2.0">
+  <defs>
+
+    <symbol id="ellipse" width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#01D7B0" stroke-opacity="0.2"
+      xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M20 11C20 15.9706 15.9706 20 11 20C6.02944 20 2 15.9706 2 11C2 6.02944 6.02944 2 11 2C15.9706 2 20 6.02944 20 11Z"
+        stroke-width="2" />
+    </symbol>
+
+    <symbol id="rectangle" width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#01D7B0" stroke-opacity="0.2"
+      xmlns="http://www.w3.org/2000/svg">
+      <path d="M2.00004 2H20V20H2.00004V2Z" stroke-width="2" />
+    </symbol>
+
+    <symbol id="triangle" width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#01D7B0" stroke-opacity="0.2"
+      xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 15H18L11 3L4 15Z" stroke-width="2" />
+    </symbol>
+
+  </defs>
+
+  <use href="#ellipse" />
+  <use href="#rectangle" />
+  <use href="#triangle" />
+</svg>
 
 </html>

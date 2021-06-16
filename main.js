@@ -1,9 +1,9 @@
 import './style.css'
 
-import swal from 'sweetalert';
-import { parse } from 'ass-compiler';
-import srtParser from 'srt-parser-2';
-import { saveAs } from "file-saver";
+import swal from 'sweetalert'
+import { parse } from 'ass-compiler'
+import srtParser from 'srt-parser-2'
+import { saveAs } from "file-saver"
 
 const fileTypes = ["srt", "ssa", "ass"]
 const newlineRegexp = /[\\N\n]/g
@@ -58,7 +58,6 @@ function onChange(event) {
           markers += `${subtitle.text.replace(newlineRegexp, ' ')}\t${convertSrtTime(subtitle.startTime)}\t${convertSrtTime(subtitle.endTime)}\tdecimal\tCue\t\n`
         })
         break
-
       case 'ass':
       case 'ssa':
         const parsed = parse(e.target.result)
@@ -75,9 +74,8 @@ function onChange(event) {
       type: 'text/plain;charset=utf-8',
     })
     saveAs(blob, filename + '.csv')
-  };
-
-  reader.readAsText(file);
+  }
+  reader.readAsText(file)
 }
 
 document.getElementById('file-input').addEventListener('change', onChange)
