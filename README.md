@@ -27,22 +27,6 @@ To use marker in **Adobe Audition**
 
 **Tip:** To navigate through the markers, use the key combination Ctrl+Alt+Arrows
 
-## 👨🏻‍💻 CLI Usage
-
-If you have installed Go you can install subkers with command
-
-```bash
-go install github.com/Terisback/subkers/cmd/subkers
-```
-
-Usage of the CLI tool:
-
-```bash
-subkers "PATH-TO-SUBS"
-```
-
-Produces .csv file in same folder.
-
 ## 🖼️ Usage in Gifs
 
 How to use web interface
