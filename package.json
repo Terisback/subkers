@@ -15,13 +15,12 @@
   "devDependencies": {
     "@types/file-saver": "^2.0.5",
     "@types/subtitle": "^2.0.3",
-    "typescript": "^4.5.4",
+    "typescript": "^4.7.3",
     "vite": "^2.9.9"
   },
   "dependencies": {
     "ass-compiler": "^0.1.4",
     "file-saver": "^2.0.5",
-    "subtitles-parser-vtt": "^0.1.0",
     "sweetalert": "^2.1.2"
   }
 }

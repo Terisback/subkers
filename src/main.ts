@@ -3,7 +3,7 @@ import './style.css'
 import swal from 'sweetalert'
 import { parse as parseASS } from 'ass-compiler'
 import { saveAs } from "file-saver"
-import { fromVtt } from "subtitles-parser-vtt";
+import { parseSRT } from './srt'
 
 const fileTypes = ["srt", "ssa", "ass"]
 const newlineRegexp = /[\\N\n]/g
@@ -60,12 +60,12 @@ function onChange(event: Event) {
       let subtitles: Subtitle[] = []
       switch (extension) {
         case 'srt':
-          subtitles = fromVtt(e.target!.result!.toString())
+          subtitles = parseSRT(e.target!.result!.toString())
             .map(subtitle => {
               const sub: Subtitle = {
-                Start: subtitle.startTime,
-                Duration: subtitle.endTime - subtitle.startTime,
-                Text: subtitle.text.replace(newlineRegexp, ' ')
+                Start: subtitle.Start / 1000,
+                Duration: (subtitle.End - subtitle.Start) / 1000,
+                Text: subtitle.Text.replace(newlineRegexp, ' ').replace('<i>', '').replace('</i>', '')
               }
               return sub
             })
@@ -91,7 +91,7 @@ function onChange(event: Event) {
 
       // Saving to CSV
       let markers = subtitles.map(subtitle => `${subtitle.Text.replaceAll('"', '""')}\t${milliToTime(subtitle.Start)}\t${milliToTime(subtitle.Duration)}\tdecimal\tCue\t`)
-      markers.unshift('Name\tStart\tEnd\tTime Format\tType\tDescription\n')
+      markers.unshift('Name\tStart\tDuration\tTime Format\tType\tDescription\n')
       var blob = new Blob([markers.join('\n')], {
         type: 'text/plain;charset=utf-8',
       })

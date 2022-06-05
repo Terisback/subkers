@@ -5,15 +5,13 @@ specifiers:
   '@types/subtitle': ^2.0.3
   ass-compiler: ^0.1.4
   file-saver: ^2.0.5
-  subtitles-parser-vtt: ^0.1.0
   sweetalert: ^2.1.2
-  typescript: ^4.5.4
+  typescript: ^4.7.3
   vite: ^2.9.9
 
 dependencies:
   ass-compiler: 0.1.4
   file-saver: 2.0.5
-  subtitles-parser-vtt: 0.1.0
   sweetalert: 2.1.2
 
 devDependencies:
@@ -325,10 +323,6 @@ packages:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}
     engines: {node: '>=0.10.0'}
     dev: true
-
-  /subtitles-parser-vtt/0.1.0:
-    resolution: {integrity: sha512-+y3GOvLL+71JLMFFjqSi4p0J9ddSbhpXKaWG6vHUT8PqPZmlhyAsfu0LP248FdVGfwNIj77wIgVkfQ2xwCZ4+Q==}
-    dev: false
 
   /supports-preserve-symlinks-flag/1.0.0:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
