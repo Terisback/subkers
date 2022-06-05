@@ -28,7 +28,7 @@ export function parseSRT(data: string): Line[] {
         })
 }
 
-const timeRegex = /(\d+):(\d{2}):(\d{2}),(\d{3})/;
+const timeRegex = /(\d+):(\d{2}):(\d{2})[,.](\d{3})/;
 
 function timeMs(val: string): number {
     let parts = timeRegex.exec(val);
