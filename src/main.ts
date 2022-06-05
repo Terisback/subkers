@@ -73,14 +73,15 @@ function onChange(event: Event) {
 
         case 'ass':
         case 'ssa':
-          subtitles = parseASS(e.target!.result!.toString()).events.dialogue.map(entry => {
-            const sub: Subtitle = {
-              Start: entry.Start,
-              Duration: entry.End - entry.Start,
-              Text: entry.Text.combined.replace(newlineRegexp, ' ')
-            }
-            return sub
-          })
+          subtitles = parseASS(e.target!.result!.toString()).events.dialogue
+            .map(entry => {
+              const sub: Subtitle = {
+                Start: entry.Start,
+                Duration: entry.End - entry.Start,
+                Text: entry.Text.combined.replace(newlineRegexp, ' ')
+              }
+              return sub
+            })
           break
 
         default:
