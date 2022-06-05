@@ -1,11 +1,8 @@
 <p align="center">
-    <a href="https://subkers.terisback.ru">
+    <a href="https://subkers.teris.dev">
         <img alt="Subkers Logo" height="320" src="https://user-images.githubusercontent.com/26527529/91093603-15d30580-e673-11ea-835f-653a29d2d993.png">
     </a>
     <br>
-    <a href="https://pkg.go.dev/github.com/Terisback/subkers?tab=doc">
-        <img alt="go.dev" src="https://img.shields.io/badge/go.dev-007d9c?logo=go&logoColor=white&style=flat-square">
-    </a>
 </p>
 
 <p align="center">
@@ -16,7 +13,7 @@
 
 ## ⚡️ Quick Usage
 
-1. Go to **https://subkers.terisback.ru/**
+1. Go to **https://subkers.teris.dev/**
 2. Upload File to convert
 3. Marker will be automatically downloaded
 
