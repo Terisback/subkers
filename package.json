@@ -16,7 +16,7 @@
     "@types/file-saver": "^2.0.5",
     "@types/subtitle": "^2.0.3",
     "typescript": "^4.7.3",
-    "vite": "^2.9.9"
+    "vite": "^2.9.16"
   },
   "dependencies": {
     "ass-compiler": "^0.1.4",
