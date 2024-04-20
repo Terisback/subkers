@@ -2,8 +2,8 @@ import './style.css'
 
 import swal from 'sweetalert'
 import { parse as parseASS } from 'ass-compiler'
+import * as srtparsejs from "srtparsejs";
 import { saveAs } from "file-saver"
-import { parseSRT } from './srt'
 
 const fileTypes = ["srt", "ssa", "ass"]
 const newlineRegexp = /[\\N\n]/g
@@ -22,8 +22,8 @@ function checkFileType(file: File) {
 function milliToTime(time: number) {
   const min = Math.floor(time / 60)
   const sec = Math.floor(time % 60)
-  const milli = Math.floor((time - Math.floor(time)) * 1000)
-  return `${min}:${sec}.${milli}`
+  const milli = Math.round((time - Math.floor(time)) * 1000)
+  return `${min}:${sec}.${milli.toString().padStart(3,'0')}`
 }
 
 type Subtitle = {
@@ -60,12 +60,12 @@ function onChange(event: Event) {
       let subtitles: Subtitle[] = []
       switch (extension) {
         case 'srt':
-          subtitles = parseSRT(e.target!.result!.toString())
+          subtitles = srtparsejs.parse(e.target!.result!.toString())
             .map(subtitle => {
               const sub: Subtitle = {
-                Start: subtitle.Start / 1000,
-                Duration: (subtitle.End - subtitle.Start) / 1000,
-                Text: subtitle.Text.replace(newlineRegexp, ' ').replace('<i>', '').replace('</i>', '')
+                Start: srtparsejs.toMS(subtitle.startTime) / 1000,
+                Duration: (srtparsejs.toMS(subtitle.endTime) - srtparsejs.toMS(subtitle.startTime)) / 1000,
+                Text: subtitle.text.replace(newlineRegexp, ' ').replace('<i>', '').replace('</i>', '')
               }
               return sub
             })
