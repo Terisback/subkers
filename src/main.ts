@@ -6,7 +6,7 @@ import * as srtparsejs from "srtparsejs";
 import { saveAs } from "file-saver"
 
 const fileTypes = ["srt", "ssa", "ass"]
-const newlineRegexp = /[\\N\n]/g
+const newlineRegexp = /\n/g
 
 function checkFileType(file: File) {
   const ext = file.name.split('.').pop()
